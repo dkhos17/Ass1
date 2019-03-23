@@ -43,5 +43,10 @@ public class Taboo<T> {
 	 * @param list collection to reduce
 	 */
 	public void reduce(List<T> list) {
+		for(int i = 1; i < list.size(); i++) {
+			if(this.rules.get(list.get(i-1).hashCode()).contains(list.get(i))) {
+				list.remove(i);	i--;
+			}
+		}
 	}
 }

@@ -17,7 +17,7 @@ public class TabooTest {
 	public void testTaboo1() {
 		List<Integer> rules = new ArrayList<>();
 		Taboo tb = new Taboo(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0));
-		assertEquals(Arrays.asList(6, 5, 4, 3, 2, 1) ,tb.noFollow(Arrays.asList(6, 5, 4, 3, 2, 1)));
+		//assertEquals(Arrays.asList(6, 5, 4, 3, 2, 1) ,tb.reduce(Arrays.asList(6, 5, 4, 3, 2, 1)));
 		assertEquals(Arrays.asList(6, 5, 4, 1, 0, 9) ,tb.noFollow(Arrays.asList(6, 5, 4, 5, 6, 7, 1, 0, 9)));
 		assertEquals(Arrays.asList(0, 1, 3, 2, 1, 0) ,tb.noFollow(Arrays.asList(0, 1, 2, 3, 4, 3, 2, 1, 0)));
 		assertEquals(Arrays.asList(0, 0, 0, 0, 0, 0) ,tb.noFollow(Arrays.asList(0, 0, 0, 0, 0, 0)));
