@@ -7,60 +7,101 @@ import static org.junit.Assert.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
 public class TabooTest {
 	
+	private <T> void fillList(List<T> elems, List<T> list) {
+		for(int i = 0; i < elems.size() && i < list.size(); i++) list.set(i, elems.get(i));
+		for(int i = list.size(); i < elems.size(); i++) list.add(elems.get(i));
+		for(int i = elems.size(); i < list.size(); i++) list.remove(i);
+	}
+	
+	private <T> Set<T> fillSet(List<T> elems, Set<T> s) {
+		s.clear();
+		for(T e : elems) s.add(e);
+		return s;
+	}
+	
+	private <T> List<T> getList(Taboo<T> tb, List<T> list, List<T> elems){
+		fillList(elems, list);
+		tb.reduce(list);
+		return list;
+	}
+	
 	@Test
 	public void testTaboo1() {
 		List<Integer> rules = new ArrayList<>();
-		Taboo tb = new Taboo(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0));
-		//assertEquals(Arrays.asList(6, 5, 4, 3, 2, 1) ,tb.reduce(Arrays.asList(6, 5, 4, 3, 2, 1)));
-		assertEquals(Arrays.asList(6, 5, 4, 1, 0, 9) ,tb.noFollow(Arrays.asList(6, 5, 4, 5, 6, 7, 1, 0, 9)));
-		assertEquals(Arrays.asList(0, 1, 3, 2, 1, 0) ,tb.noFollow(Arrays.asList(0, 1, 2, 3, 4, 3, 2, 1, 0)));
-		assertEquals(Arrays.asList(0, 0, 0, 0, 0, 0) ,tb.noFollow(Arrays.asList(0, 0, 0, 0, 0, 0)));
-		assertEquals(Arrays.asList(1, 1, 9, 9, 2, 2) ,tb.noFollow(Arrays.asList(1, 1, 9, 9, 0, 0, 2, 2, 3, 3)));
-		assertEquals(Arrays.asList() ,tb.noFollow(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0)));
-		assertEquals(Arrays.asList(0) ,tb.noFollow(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0)));
+		List<Integer> test = new ArrayList<>();
+		fillList(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0), rules);
+		Taboo<Integer> tb = new Taboo<Integer>(rules);
+		
+		assertEquals(Arrays.asList(6, 5, 4, 3, 2, 1), getList(tb, test, Arrays.asList(6, 5, 4, 3, 2, 1)));
+		assertEquals(Arrays.asList(6, 5, 4, 6, 1, 0, 9), getList(tb, test, Arrays.asList(6, 5, 4, 5, 6, 7, 1, 0, 9)));
+		assertEquals(Arrays.asList(0, 1, 3, 3, 2, 1, 0), getList(tb, test, Arrays.asList(0, 1, 2, 3, 4, 3, 2, 1, 0)));
+		assertEquals(Arrays.asList(1, 1, 9, 9, 2, 2), getList(tb, test, Arrays.asList(1, 1, 9, 9, 0, 0, 2, 2, 3, 3)));
+		assertEquals(Arrays.asList(1, 3, 5, 7, 9), getList(tb, test, Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 0)));
+		assertEquals(Arrays.asList(0, 1, 3, 5, 7, 9), getList(tb, test, Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0)));
+		assertEquals(Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0), getList(tb, test, Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0)));
+		
+		Set<Integer> s = new HashSet<Integer>();
+		assertEquals(fillSet(Arrays.asList(2), s), tb.noFollow(1));
+		assertEquals(fillSet(Arrays.asList(6), s), tb.noFollow(5));
+		assertEquals(fillSet(Arrays.asList(8), s), tb.noFollow(7));
+		s.clear();
+		//assertEquals(s, tb.noFollow(0));
 	}
 	
 	@Test
 	public void testTaboo2() {
 		List<String> rules = new ArrayList<>();
-		Taboo tb = new Taboo(Arrays.asList("aa", "ab", "ac", "ad", "ac", "ab", "aa"));
-		assertEquals(Arrays.asList() ,tb.noFollow(Arrays.asList("aa", "ab", "aa", "ab", "aa", "ab")));
-		assertEquals(Arrays.asList("aa", "ac", "ac", "ab", "ad", "aa") ,tb.noFollow(Arrays.asList("aa", "ab", "ac", "ab", "ad", "aa")));
-		assertEquals(Arrays.asList("ab", "ab") ,tb.noFollow(Arrays.asList("ab", "ac", "aa", "ac", "ab", "ac")));
-		assertEquals(Arrays.asList("ab", "ad") ,tb.noFollow(Arrays.asList("ab", "ac", "aa", "ac", "ad", "ac")));
-		assertEquals(Arrays.asList("ab", "ad", "aa", "ad", "ab") ,tb.noFollow(Arrays.asList("ab", "ad", "aa", "ad", "ab", "ac")));
-		assertEquals(Arrays.asList("ab", "az", "ac", "ay", "ac") ,tb.noFollow(Arrays.asList("ab", "ac", "az", "ac", "ay", "ac")));
-		assertEquals(Arrays.asList("ba", "bac", "aba", "bac", "bab", "aac") ,tb.noFollow(Arrays.asList("ba", "bac", "aba", "bac", "bab", "aac")));
-		assertEquals(Arrays.asList("ab", "bac", "ac", "bab", "aac") ,tb.noFollow(Arrays.asList("ab", "bac", "ac", "ab", "bab", "aac")));
+		List<String> test = new ArrayList<>();
+		fillList(Arrays.asList("aa", "ab", "ac", "ad", "ac", "ab", "aa", null, null), rules);
+		Taboo<String> tb = new Taboo<String>(rules);
+		
+		assertEquals(Arrays.asList("aa", "aa", "aa"), getList(tb, test, Arrays.asList("aa", "ab", "aa", "ab", "aa", "ab")));
+		assertEquals(Arrays.asList("aa", "ac", "aa"), getList(tb, test, Arrays.asList("aa", "ab", "ac", "ab", "ad", "aa")));
+		assertEquals(Arrays.asList("ab", "ab"), getList(tb, test, Arrays.asList("ab", "ac", "aa", "ac", "ab", "ac")));
+		assertEquals(Arrays.asList("ab", "ad"), getList(tb, test, Arrays.asList("ab", "ac", "aa", "ac", "ad", "ac")));
+		assertEquals(Arrays.asList("ab", "ab"), getList(tb, test, Arrays.asList("ab", "ac", "aa", "ac", "ab", "ac")));
+		assertEquals(Arrays.asList("ab", "ad", "aa", "ad", "ab"), getList(tb, test, Arrays.asList("ab", "ad", "aa", "ad", "ab", "ac")));
+		assertEquals(Arrays.asList("ab", "az", "ac", "ay", "ac"), getList(tb, test, Arrays.asList("ab", "ac", "az", "ac", "ay", "ac")));
+		assertEquals(Arrays.asList("ba", "bac", "aba", "bac", "bab", "aac"), getList(tb, test, Arrays.asList("ba", "bac", "aba", "bac", "bab", "aac")));
+		assertEquals(Arrays.asList("ab", "bac", "ac", "bab", "aac"), getList(tb, test, Arrays.asList("ab", "bac", "ac", "ab", "bab", "aac")));
 	}
 	
 	@Test
 	public void testTaboo3() {
 		List<Double> rules = new ArrayList<>();
-		Taboo tb = new Taboo(Arrays.asList(0.11 , 0.33, 0.55, null, 0.77, 0.99, 0.33));
-		assertEquals(Arrays.asList(0.55, 0.77) ,tb.noFollow(Arrays.asList(0.11 , 0.33, 0.55, 0.77, 0.99)));
-		assertEquals(Arrays.asList(0.99, 0.77, 0.55, 0.33, 0.11) ,tb.noFollow(Arrays.asList(0.99, 0.77, 0.55, 0.33, 0.11)));
-		assertEquals(Arrays.asList(0.2, 0.4, 0.11, 0.88) ,tb.noFollow(Arrays.asList(0.2, 0.4, 0.11, 0.33, 0.88)));
-		assertEquals(Arrays.asList(0.11, 0.99, 0.22, 3.14) ,tb.noFollow(Arrays.asList(0.11, 0.33, 0.99, 0.33, 0.22, 3.14)));
-		assertEquals(Arrays.asList(10.00, 0.15, 0.33, 0.99, 0.22, 3.14, 0.80, 0.99) ,tb.noFollow(Arrays.asList(10.00, 0.15, 0.33, 0.99, 0.33, 0.22, 3.14, 0.80, 0.99)));
+		List<Double> test = new ArrayList<>();
+		fillList(Arrays.asList(0.11 , 0.33, 0.55, null, 0.77, 0.99, 0.33), rules);
+		Taboo<Double> tb = new Taboo<Double>(rules);
+		
+		assertEquals(Arrays.asList(0.11, 0.55, 0.77), getList(tb, test, Arrays.asList(0.11 , 0.33, 0.55, 0.77, 0.99)));
+		assertEquals(Arrays.asList(0.99, 0.77, 0.55, 0.33, 0.11), getList(tb, test, Arrays.asList(0.99, 0.77, 0.55, 0.33, 0.11)));
+		assertEquals(Arrays.asList(0.2, 0.4, 0.11, 0.88), getList(tb, test, Arrays.asList(0.2, 0.4, 0.11, 0.33, 0.88)));
+		assertEquals(Arrays.asList(0.11, 0.99, 0.22, 3.14), getList(tb, test, Arrays.asList(0.11, 0.33, 0.99, 0.33, 0.22, 3.14)));
+		assertEquals(Arrays.asList(10.00, 0.15, 0.33, 0.99, 0.22, 3.14, 0.80, 0.99), getList(tb, test, Arrays.asList(10.00, 0.15, 0.33, 0.99, 0.33, 0.22, 3.14, 0.80, 0.99)));
 	}
 	
 	@Test
 	public void testTaboo4() {
 		List<Character> rules = new ArrayList<>();
-		Taboo tb = new Taboo(Arrays.asList('a', 'b', 'c', 'z', 'x', null, 'a', 'y', 'z'));
-		assertEquals(Arrays.asList('x', 'a') ,tb.noFollow(Arrays.asList('a', 'b', 'c', 'z', 'x', 'b', 'a', 'y', 'z')));
-		assertEquals(Arrays.asList('a', 'a', 'a', 'a') ,tb.noFollow(Arrays.asList('a', 'a', 'y', 'b', 'b', 'c', 'a', 'a', 'b')));
-		assertEquals(Arrays.asList('b', 'x', 'z', 'z', 'a') ,tb.noFollow(Arrays.asList('b', 'x', 'z', 'z', 'x', 'a', 'b', 'y', 'z')));
-		assertEquals(Arrays.asList('a', 'x', 'a') ,tb.noFollow(Arrays.asList('a', 'x', 'a')));
-		assertEquals(Arrays.asList('a', 'x', 'y') ,tb.noFollow(Arrays.asList('a', 'x', 'y', 'z')));
-		assertEquals(Arrays.asList('a', 'x', 't', 'm', 'x' , 'a', 'x', 'y', 'z') ,tb.noFollow(Arrays.asList('a', 'x', 't', 'm', 'x' , 'a', 'x', 'y', 'z', 'x')));
+		List<Character> test = new ArrayList<>();
+		fillList(Arrays.asList('a', 'b', 'c', 'z', 'x', null, 'a', 'y', 'z'), rules);
+		Taboo<Character> tb = new Taboo<Character>(rules);
+		
+		assertEquals(Arrays.asList(null, 'a', 'c', 'x', 'b', 'a', 'z'), getList(tb, test, Arrays.asList(null, 'a', 'b', 'c', 'z', 'x', 'b', 'a', 'y', 'z')));
+		assertEquals(Arrays.asList('a', 'a', 'c', 'a', 'a'), getList(tb, test, Arrays.asList('a', 'a', 'y', 'b', 'b', 'c', 'a', 'a', 'b')));
+		assertEquals(Arrays.asList('b', 'x', 'z', 'z', 'a', 'z'), getList(tb, test, Arrays.asList('b', 'x', 'z', 'z', 'x', 'a', 'b', 'y', 'z')));
+		assertEquals(Arrays.asList('a', 'x', 'a'), getList(tb, test, Arrays.asList('a', 'x', null,  'a')));
+		assertEquals(Arrays.asList('a', 'x', 'y', null), getList(tb, test, Arrays.asList('a', 'x', 'y', 'z', null)));
+		assertEquals(Arrays.asList('a', 'x', 't', 'm', 'x' , 'a', 'x', 'y', 'x'), getList(tb, test, Arrays.asList('a', 'x', 't', 'm', 'x' , 'a', 'x', 'y', 'z', 'x')));
+		assertEquals(Arrays.asList('a', 'x', 'a'), getList(tb, test, Arrays.asList('a', 'x', 'a')));
 	}
 	// TODO ADD TESTS
 }
