@@ -27,10 +27,12 @@ public class AppearancesTest {
 	@Test
 	public void testSameCount2() {
 		// basic List<Integer> cases
+		Appearances ap = new Appearances();
 		List<Integer> a = Arrays.asList(1, 2, 3, 1, 2, 3, 5);
-		assertEquals(1, Appearances.sameCount(a, Arrays.asList(1, 9, 9, 1)));
-		assertEquals(2, Appearances.sameCount(a, Arrays.asList(1, 3, 3, 1)));
-		assertEquals(1, Appearances.sameCount(a, Arrays.asList(1, 3, 3, 1, 1)));
+		assertEquals(1, ap.sameCount(a, Arrays.asList(1, 9, 9, 1)));
+		assertEquals(2, ap.sameCount(a, Arrays.asList(1, 3, 3, 1)));
+		assertEquals(1, ap.sameCount(a, Arrays.asList(1, 3, 3, 1, 1)));
+		assertEquals(0, ap.sameCount(new ArrayList<Integer>(), Arrays.asList(1, 3, 3, 1, 1)));
 	}
 	
 	@Test
@@ -45,6 +47,7 @@ public class AppearancesTest {
 		assertEquals(0, Appearances.sameCount(a, Arrays.asList('a', 'b', 'b', 'z', 'z', 'z', 'e', 'a', 'b', 'z', 'e')));
 		assertEquals(1, Appearances.sameCount(a, Arrays.asList('a', 'b', 'b', 'z', 'z', 'z', 'e', 'a', 'b', 'z')));
 		assertEquals(4, Appearances.sameCount(a, Arrays.asList('b', 'b', 'z', 'z', 'z', 'a', 'e')));
+		assertEquals(0, Appearances.sameCount(new ArrayList<Character>(), Arrays.asList('b', 'b', 'z', 'z', 'z', 'a', 'e')));
 	}
 	
 	@Test

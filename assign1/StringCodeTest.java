@@ -64,15 +64,17 @@ public class StringCodeTest {
 	//
 	@Test
 	public void testRun1() {
-		assertEquals(2, StringCode.maxRun("hoopla"));
-		assertEquals(3, StringCode.maxRun("hoopllla"));
+		StringCode sc = new StringCode();
+		assertEquals(2, sc.maxRun("hoopla"));
+		assertEquals(3, sc.maxRun("hoopllla"));
 	}
 	
 	@Test
 	public void testRun2() {
-		assertEquals(3, StringCode.maxRun("abbcccddbbbxx"));
-		assertEquals(0, StringCode.maxRun(""));
-		assertEquals(3, StringCode.maxRun("hhhooppoo"));
+		StringCode sc = new StringCode();
+		assertEquals(3, sc.maxRun("abbcccddbbbxx"));
+		assertEquals(0, sc.maxRun(""));
+		assertEquals(3, sc.maxRun("hhhooppoo"));
 	}
 	
 	@Test

@@ -13,11 +13,26 @@ public class CharGridTest {
 				{'x', 'a', 'z'},
 			};
 		
-		
-		CharGrid cg = new CharGrid(grid);
-				
+		CharGrid cg = new CharGrid(grid);			
 		assertEquals(4, cg.charArea('a'));
 		assertEquals(1, cg.charArea('z'));
+		
+		char[][] grid1 = new char[][] {
+			{'a', 'b'},
+			{'b', 'z'}
+		};
+	
+		CharGrid cg1 = new CharGrid(grid1);
+		assertEquals(1, cg1.charArea('a'));
+		assertEquals(4, cg1.charArea('b'));
+		
+		char[][] grid2 = new char[][] {
+			{'a'},
+		};
+	
+		CharGrid cg2 = new CharGrid(grid2);
+		assertEquals(1, cg2.charArea('a'));
+		assertEquals(0, cg2.charArea('z'));
 	}
 	
 	

@@ -24,7 +24,7 @@ public class Taboo<T> {
 			}else {
 				Set<T> val = new HashSet<>();
 				val.add(rules.get(i+1));
-				rule.put(hash, val);
+				rule.put(hash, val); 	
 			}
 		}
 	}
@@ -36,7 +36,8 @@ public class Taboo<T> {
 	 * @return elements which should not follow the given element
 	 */
 	public Set<T> noFollow(T elem) {
-		 return rule.get(elem.hashCode()); // TODO YOUR CODE HERE
+		 Set<T> s = rule.get(elem.hashCode());
+		 return s == null ? new HashSet<T>() :s; // TODO YOUR CODE HERE
 	}
 	
 	/**

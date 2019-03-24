@@ -44,11 +44,9 @@ public class CharGrid {
 				max_wid = Math.max(w2, max_wid);
 			}
 		}
-		if(min_wid == -1 || max_wid == -1) return 0;
-		if(min_len == -1 || max_len == -1) return 0;
 		
 		int area = (max_wid-min_wid+1)*(max_len-min_len+1);
-		return area;
+		return (area < 0) ? 0 : area;
 	}
 	
 	
@@ -62,12 +60,11 @@ public class CharGrid {
 			if(grid[k][j-stick-1] == grid[i][j-1]) up++;
 			else break;
 		}
-		if(up != stick) return false;
 		for(int k = i; k < grid.length; k++) {
 			if(grid[k][j-stick-1] == grid[i][j-1]) dw++;
 			else break;
 		}
-		return dw == stick;
+		return dw == stick && up == stick;
 	}
 	/**
 	 * Returns the count of '+' figures in the grid (see handout).

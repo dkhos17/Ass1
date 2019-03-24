@@ -10,7 +10,7 @@ public class Appearances {
 	 * @return number of same-appearance elements
 	 */
 	public static <T> int sameCount(Collection<T> a, Collection<T> b) {
-		if(a.isEmpty() || b.isEmpty())return 0;
+		if(a.isEmpty() || b.isEmpty()) return 0;
 		HashMap<Integer, Integer> cnt1 = new HashMap<>();
 		HashMap<Integer, Integer> cnt2 = new HashMap<>();
 		for(T e1 : a) {

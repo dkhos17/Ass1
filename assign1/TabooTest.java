@@ -16,9 +16,7 @@ import org.junit.Test;
 public class TabooTest {
 	
 	private <T> void fillList(List<T> elems, List<T> list) {
-		for(int i = 0; i < elems.size() && i < list.size(); i++) list.set(i, elems.get(i));
-		for(int i = list.size(); i < elems.size(); i++) list.add(elems.get(i));
-		for(int i = elems.size(); i < list.size(); i++) list.remove(i);
+		for(int i = 0; i < elems.size(); i++) list.add(elems.get(i));
 	}
 	
 	private <T> Set<T> fillSet(List<T> elems, Set<T> s) {
@@ -28,6 +26,7 @@ public class TabooTest {
 	}
 	
 	private <T> List<T> getList(Taboo<T> tb, List<T> list, List<T> elems){
+		list.clear();
 		fillList(elems, list);
 		tb.reduce(list);
 		return list;
@@ -53,7 +52,7 @@ public class TabooTest {
 		assertEquals(fillSet(Arrays.asList(6), s), tb.noFollow(5));
 		assertEquals(fillSet(Arrays.asList(8), s), tb.noFollow(7));
 		s.clear();
-		//assertEquals(s, tb.noFollow(0));
+		assertEquals(s, tb.noFollow(0));
 	}
 	
 	@Test
@@ -72,6 +71,13 @@ public class TabooTest {
 		assertEquals(Arrays.asList("ab", "az", "ac", "ay", "ac"), getList(tb, test, Arrays.asList("ab", "ac", "az", "ac", "ay", "ac")));
 		assertEquals(Arrays.asList("ba", "bac", "aba", "bac", "bab", "aac"), getList(tb, test, Arrays.asList("ba", "bac", "aba", "bac", "bab", "aac")));
 		assertEquals(Arrays.asList("ab", "bac", "ac", "bab", "aac"), getList(tb, test, Arrays.asList("ab", "bac", "ac", "ab", "bab", "aac")));
+		
+		Set<String> s = new HashSet<String>();
+		assertEquals(fillSet(Arrays.asList("ab"), s), tb.noFollow("aa"));
+		assertEquals(fillSet(Arrays.asList("ac", "aa"), s), tb.noFollow("ab"));
+		assertEquals(fillSet(Arrays.asList("ad", "ab"), s), tb.noFollow("ac"));
+		s.clear();
+		assertEquals(s, tb.noFollow("zz"));
 	}
 	
 	@Test
@@ -86,6 +92,13 @@ public class TabooTest {
 		assertEquals(Arrays.asList(0.2, 0.4, 0.11, 0.88), getList(tb, test, Arrays.asList(0.2, 0.4, 0.11, 0.33, 0.88)));
 		assertEquals(Arrays.asList(0.11, 0.99, 0.22, 3.14), getList(tb, test, Arrays.asList(0.11, 0.33, 0.99, 0.33, 0.22, 3.14)));
 		assertEquals(Arrays.asList(10.00, 0.15, 0.33, 0.99, 0.22, 3.14, 0.80, 0.99), getList(tb, test, Arrays.asList(10.00, 0.15, 0.33, 0.99, 0.33, 0.22, 3.14, 0.80, 0.99)));
+	
+		Set<Double> s = new HashSet<Double>();
+		assertEquals(fillSet(Arrays.asList(0.33), s), tb.noFollow(0.11));
+		assertEquals(fillSet(Arrays.asList(0.55), s), tb.noFollow(0.33));
+		assertEquals(fillSet(Arrays.asList(0.33), s), tb.noFollow(0.99));
+		s.clear();
+		assertEquals(s, tb.noFollow(0.55));
 	}
 	
 	@Test
@@ -98,10 +111,17 @@ public class TabooTest {
 		assertEquals(Arrays.asList(null, 'a', 'c', 'x', 'b', 'a', 'z'), getList(tb, test, Arrays.asList(null, 'a', 'b', 'c', 'z', 'x', 'b', 'a', 'y', 'z')));
 		assertEquals(Arrays.asList('a', 'a', 'c', 'a', 'a'), getList(tb, test, Arrays.asList('a', 'a', 'y', 'b', 'b', 'c', 'a', 'a', 'b')));
 		assertEquals(Arrays.asList('b', 'x', 'z', 'z', 'a', 'z'), getList(tb, test, Arrays.asList('b', 'x', 'z', 'z', 'x', 'a', 'b', 'y', 'z')));
-//		assertEquals(Arrays.asList('a', 'x', 'a'), getList(tb, test, Arrays.asList('a', 'x', null,  'a')));
-//		assertEquals(Arrays.asList('a', 'x', 'y', null), getList(tb, test, Arrays.asList('a', 'x', 'y', 'z', null)));
-//		assertEquals(Arrays.asList('a', 'x', 't', 'm', 'x' , 'a', 'x', 'y', 'x'), getList(tb, test, Arrays.asList('a', 'x', 't', 'm', 'x' , 'a', 'x', 'y', 'z', 'x')));
-//		assertEquals(Arrays.asList('a', 'x', 'a'), getList(tb, test, Arrays.asList('a', 'x', 'a')));
+		assertEquals(Arrays.asList('a', 'x', null, 'a'), getList(tb, test, Arrays.asList('a', 'x', null, 'a')));
+		assertEquals(Arrays.asList('a', 'x', 'y', null), getList(tb, test, Arrays.asList('a', 'x', 'y', 'z', null)));
+		assertEquals(Arrays.asList('a', 'x', 't', 'm', 'x' , 'a', 'x', 'y', 'x'), getList(tb, test, Arrays.asList('a', 'x', 't', 'm', 'x' , 'a', 'x', 'y', 'z', 'x')));
+		assertEquals(Arrays.asList('a', 'x', 'a'), getList(tb, test, Arrays.asList('a', 'x', 'a')));
+		
+		Set<Character> s = new HashSet<Character>();
+		assertEquals(fillSet(Arrays.asList('b', 'y'), s), tb.noFollow('a'));
+		assertEquals(fillSet(Arrays.asList('c'), s), tb.noFollow('b'));
+		assertEquals(fillSet(Arrays.asList('x'), s), tb.noFollow('z'));
+		s.clear();
+		assertEquals(s, tb.noFollow('x'));
 	}
 	// TODO ADD TESTS
 }
