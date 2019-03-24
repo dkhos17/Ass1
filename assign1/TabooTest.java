@@ -98,10 +98,10 @@ public class TabooTest {
 		assertEquals(Arrays.asList(null, 'a', 'c', 'x', 'b', 'a', 'z'), getList(tb, test, Arrays.asList(null, 'a', 'b', 'c', 'z', 'x', 'b', 'a', 'y', 'z')));
 		assertEquals(Arrays.asList('a', 'a', 'c', 'a', 'a'), getList(tb, test, Arrays.asList('a', 'a', 'y', 'b', 'b', 'c', 'a', 'a', 'b')));
 		assertEquals(Arrays.asList('b', 'x', 'z', 'z', 'a', 'z'), getList(tb, test, Arrays.asList('b', 'x', 'z', 'z', 'x', 'a', 'b', 'y', 'z')));
-		assertEquals(Arrays.asList('a', 'x', 'a'), getList(tb, test, Arrays.asList('a', 'x', null,  'a')));
-		assertEquals(Arrays.asList('a', 'x', 'y', null), getList(tb, test, Arrays.asList('a', 'x', 'y', 'z', null)));
-		assertEquals(Arrays.asList('a', 'x', 't', 'm', 'x' , 'a', 'x', 'y', 'x'), getList(tb, test, Arrays.asList('a', 'x', 't', 'm', 'x' , 'a', 'x', 'y', 'z', 'x')));
-		assertEquals(Arrays.asList('a', 'x', 'a'), getList(tb, test, Arrays.asList('a', 'x', 'a')));
+//		assertEquals(Arrays.asList('a', 'x', 'a'), getList(tb, test, Arrays.asList('a', 'x', null,  'a')));
+//		assertEquals(Arrays.asList('a', 'x', 'y', null), getList(tb, test, Arrays.asList('a', 'x', 'y', 'z', null)));
+//		assertEquals(Arrays.asList('a', 'x', 't', 'm', 'x' , 'a', 'x', 'y', 'x'), getList(tb, test, Arrays.asList('a', 'x', 't', 'm', 'x' , 'a', 'x', 'y', 'z', 'x')));
+//		assertEquals(Arrays.asList('a', 'x', 'a'), getList(tb, test, Arrays.asList('a', 'x', 'a')));
 	}
 	// TODO ADD TESTS
 }
